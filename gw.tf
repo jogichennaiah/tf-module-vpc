@@ -17,20 +17,18 @@ resource "aws_eip" "ngw_ip" {
 }
 
 
-# Creating Nat Gate Way and will be aatached to public subnet
+## Creates NAT Gateway and will be attached to Public Subnet
 resource "aws_nat_gateway" "ngw" {
-    allocation_id  = aws_eip.example.id
-    subnet_id      = aws_subnet.public_subnet.*.id[0]
+  allocation_id = aws_eip.ngw_ip.id
+  subnet_id     = aws_subnet.public_subnet.*.id[0] 
 
-     tags  = {
-        Name = "gw NAT"
-     }
-    depends_on  = [aws_internet_gateway.igw, aws_eip.ngw_ip]
-
-}
+  tags = {
+    Name = "gw NAT"
+  }
 
 # To ensure proper ordering, it is recommended to add an explacit dependencey
 # On the Internet Gateway for the vpc 
 
   
-
+depends_on = [aws_internet_gateway.igw, aws_eip.ngw_ip]
+}
